@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Orbitron:wght@700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--c:#00d4ff;--p:#bf00ff;--dark:#020b18;--d2:#071420;--d3:#0a1e30;--text:#e0f4ff;--muted:#5a8a9a;--dim:#1a3040;--grad:linear-gradient(135deg,#00d4ff,#bf00ff)}
+body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--grad)}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(36px)}to{opacity:1;transform:translateY(0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes spinRev{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.5)}}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideInRight{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+@keyframes countUp{from{opacity:0}to{opacity:1}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes borderGlow{0%,100%{border-color:rgba(0,212,255,.15)}50%{border-color:rgba(0,212,255,.5)}}
+
+/* NAV */
+.nav{position:sticky;top:0;background:rgba(2,11,24,.96);backdrop-filter:blur(18px);border-bottom:1px solid rgba(0,212,255,.1);z-index:100;padding:0 5vw}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:66px}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo-text{font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:3px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-sub{font-size:8px;letter-spacing:4px;color:#2a4050;font-family:'DM Sans',sans-serif;text-transform:uppercase}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nl{background:none;border:none;color:#4a7a8a;font-family:'Syne',sans-serif;font-weight:600;font-size:12px;padding:7px 13px;cursor:pointer;position:relative;transition:color .3s;border-radius:3px}
+.nl::after{content:'';position:absolute;bottom:0;left:50%;right:50%;height:1.5px;background:var(--grad);transition:all .3s;border-radius:2px}
+.nl:hover,.nl.act{color:#e0f4ff}
+.nl:hover::after,.nl.act::after{left:13px;right:13px}
+.nav-cta{padding:9px 22px;background:var(--grad);color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;border:none;border-radius:4px;cursor:pointer;transition:all .3s;margin-left:8px}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,212,255,.35)}
+
+/* HERO */
+.hero{min-height:calc(100vh - 66px);display:flex;align-items:center;position:relative;overflow:hidden;background-image:linear-gradient(rgba(0,212,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.04) 1px,transparent 1px);background-size:52px 52px;padding:80px 5vw}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 55% at 50% 50%,rgba(0,212,255,.07),transparent)}
+.ring-cont{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:560px;height:560px;pointer-events:none}
+.ring{position:absolute;border-radius:50%}
+.r1{inset:0;border:1px solid rgba(0,212,255,.08);animation:spin 24s linear infinite}
+.r2{inset:32px;border:1px dashed rgba(191,0,255,.07);animation:spinRev 18s linear infinite}
+.r3{inset:80px;border:.5px solid rgba(0,212,255,.05);animation:spin 38s linear infinite}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;width:100%}
+.hero-left{animation:slideInLeft .9s ease .1s both}
+.hero-eyebrow{font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:7px;color:var(--c);margin-bottom:18px;opacity:.8}
+.hero-h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(36px,5.5vw,64px);line-height:1.1;margin-bottom:12px}
+.grad-text{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-family:'Orbitron',sans-serif;font-size:clamp(10px,1.5vw,14px);letter-spacing:5px;color:#3a6070;margin-bottom:22px;text-transform:uppercase}
+.hero-p{font-family:'DM Sans',sans-serif;font-size:15px;color:var(--muted);line-height:1.8;max-width:460px;margin-bottom:36px}
+.btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn-p{padding:13px 28px;background:var(--grad);color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;border:none;border-radius:4px;cursor:pointer;transition:all .3s}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,212,255,.3)}
+.btn-o{padding:12px 26px;background:transparent;color:var(--c);font-family:'Syne',sans-serif;font-weight:600;font-size:13px;border:1px solid rgba(0,212,255,.4);border-radius:4px;cursor:pointer;transition:all .3s}
+.btn-o:hover{background:rgba(0,212,255,.07);transform:translateY(-2px)}
+.hero-right{display:flex;align-items:center;justify-content:center;animation:slideInRight .9s ease .2s both}
+.eye-wrap{position:relative;width:300px;height:300px;display:flex;align-items:center;justify-content:center}
+.eye-ring{position:absolute;border-radius:50%}
+.er1{inset:0;border:1px solid rgba(0,212,255,.15);animation:spin 18s linear infinite}
+.er2{inset:24px;border:1px dashed rgba(191,0,255,.12);animation:spinRev 12s linear infinite}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:48px;animation:fadeUp .9s ease .5s both}
+.hs{background:var(--d2);border:1px solid rgba(0,212,255,.15);padding:18px 10px;text-align:center;border-radius:5px;animation:borderGlow 4s infinite}
+.hs-n{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(16px,2.5vw,24px);background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hs-l{font-family:'DM Sans',sans-serif;font-size:10px;color:var(--dim);letter-spacing:1px;margin-top:5px;text-transform:uppercase}
+
+/* SECTION COMMONS */
+.sec{padding:90px 5vw}
+.sec-alt{background-image:linear-gradient(rgba(0,212,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.03) 1px,transparent 1px);background-size:52px 52px}
+.sec-head{text-align:center;margin-bottom:56px}
+.eyebrow{font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:5px;color:var(--c);margin-bottom:10px;text-transform:uppercase}
+.ey-p{color:var(--p)}
+.sec-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(24px,4vw,40px);background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.divider{width:52px;height:2px;background:var(--grad);border-radius:2px;margin:16px auto}
+.sec-p{font-family:'DM Sans',sans-serif;font-size:15px;color:var(--muted);max-width:500px;margin:0 auto;line-height:1.7}
+
+/* SERVICES */
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.svc-card{background:var(--d2);border:1px solid rgba(0,212,255,.1);border-radius:5px;padding:26px 22px;transition:all .35s;position:relative;overflow:hidden}
+.svc-card::before{content:'';position:absolute;left:0;top:0;width:3px;height:100%;background:var(--grad);transform:scaleY(0);transform-origin:bottom;transition:transform .35s}
+.svc-card:hover{transform:translateY(-5px);border-color:rgba(0,212,255,.35);box-shadow:0 12px 36px rgba(0,212,255,.1)}
+.svc-card:hover::before{transform:scaleY(1)}
+.svc-icon{font-size:28px;margin-bottom:14px}
+.svc-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:#e0f4ff;margin-bottom:10px}
+.svc-desc{font-family:'DM Sans',sans-serif;font-size:13px;color:#3a6070;line-height:1.7}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.about-left{}
+.about-h{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(24px,4vw,38px);background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:20px;line-height:1.2}
+.about-p{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:14px}
+.about-pt{display:flex;align-items:center;gap:12;margin-bottom:13px}
+.about-right{position:relative;height:380px;display:flex;align-items:center;justify-content:center}
+.astat{position:absolute;background:var(--d2);border:1px solid rgba(0,212,255,.22);border-radius:5px;padding:12px 16px;text-align:center}
+.astat-n{font-family:'Orbitron',sans-serif;font-weight:900;font-size:20px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.astat-l{font-family:'DM Sans',sans-serif;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px}
+
+/* PROJECTS */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px}
+.proj-card{background:var(--d2);border:1px solid rgba(0,212,255,.1);border-radius:5px;padding:26px 22px;transition:all .35s;position:relative}
+.proj-card:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(0,212,255,.1);border-color:rgba(0,212,255,.35)}
+.status{display:inline-flex;align-items:center;gap:7px;font-family:'Orbitron',sans-serif;font-size:8px;letter-spacing:2px;border:1px solid;padding:3px 10px;border-radius:2px;margin-bottom:12px}
+.dot{width:5px;height:5px;border-radius:50%;display:inline-block}
+.proj-tag{font-family:'DM Sans',sans-serif;font-size:10px;color:rgba(0,212,255,.4);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.proj-h{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;color:#e0f4ff;margin-bottom:10px}
+.proj-p{font-family:'DM Sans',sans-serif;font-size:13px;color:#3a6070;line-height:1.65}
+
+/* WORKSHOPS */
+.ws-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.ws-card{background:var(--d2);border:1px solid rgba(0,212,255,.1);border-radius:5px;padding:26px 22px;transition:all .35s}
+.ws-card:hover{border-color:rgba(191,0,255,.4);background:var(--d3);transform:translateY(-4px)}
+.ws-icon{font-size:28px;margin-bottom:12px}
+.ws-h{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:#e0f4ff;margin-bottom:9px}
+.ws-p{font-family:'DM Sans',sans-serif;font-size:13px;color:#3a6070;line-height:1.65;margin-bottom:16px}
+.ws-tags{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.ws-tag{font-family:'DM Sans',sans-serif;font-size:11px;color:var(--muted);background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.14);padding:3px 10px;border-radius:2px}
+.ws-btn{padding:8px 18px;border:1px solid rgba(0,212,255,.35);background:transparent;color:var(--c);font-family:'Syne',sans-serif;font-size:11px;font-weight:600;cursor:pointer;border-radius:3px;transition:all .3s}
+.ws-btn:hover{background:rgba(0,212,255,.09)}
+
+/* PRICING */
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:900px;margin:0 auto}
+.pc{background:var(--d2);border:1px solid rgba(0,212,255,.12);border-radius:6px;padding:32px 26px;position:relative;transition:all .35s}
+.pc:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,212,255,.1)}
+.pc-hot{border:2px solid rgba(0,212,255,.55);transform:scale(1.04);box-shadow:0 0 36px rgba(0,212,255,.12);background:linear-gradient(160deg,#071f35,#0d1f38)}
+.pc-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--grad);color:white;font-family:'Orbitron',sans-serif;font-size:8px;letter-spacing:3px;padding:5px 16px;border-radius:20px}
+.pc-label{font-family:'Orbitron',sans-serif;font-size:8px;letter-spacing:4px;color:var(--muted);margin-bottom:6px;text-transform:uppercase}
+.pc-tier{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:#e0f4ff;margin-bottom:14px}
+.pc-price{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(28px,3.5vw,38px);background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.pc-period{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--dim)}
+.pc-sep{width:100%;height:1px;background:rgba(0,212,255,.08);margin:18px 0}
+.pc-feat{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.pc-check{color:var(--c);font-size:13px;flex-shrink:0}
+.pc-feat-t{font-family:'DM Sans',sans-serif;font-size:13px;color:#7ab8d4}
+.pc-btn{width:100%;padding:13px;margin-top:22px;background:transparent;border:1px solid rgba(0,212,255,.4);color:var(--c);font-family:'Syne',sans-serif;font-weight:700;font-size:12px;border-radius:4px;cursor:pointer;transition:all .3s}
+.pc-btn:hover{background:rgba(0,212,255,.09);box-shadow:0 0 18px rgba(0,212,255,.2)}
+.pc-btn-hot{background:var(--grad);color:white;border:none}
+.pc-btn-hot:hover{opacity:.9;box-shadow:0 6px 22px rgba(0,212,255,.3)}
+
+/* TEAM */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.tc{background:var(--d2);border:1px solid rgba(0,212,255,.1);border-radius:5px;overflow:hidden;transition:all .35s}
+.tc:hover{transform:translateY(-6px);box-shadow:0 16px 44px rgba(191,0,255,.12);border-color:rgba(191,0,255,.35)}
+.tc-bar{height:4px}
+.tc-body{padding:26px 20px}
+.tc-av{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(191,0,255,.15));border:1px solid rgba(0,212,255,.28);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:16px;color:var(--c);margin-bottom:16px}
+.tc-name{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#e0f4ff;margin-bottom:3px}
+.tc-role{font-family:'Orbitron',sans-serif;font-size:8px;letter-spacing:3px;color:var(--c);text-transform:uppercase;margin-bottom:10px}
+.tc-desc{font-family:'DM Sans',sans-serif;font-size:12px;color:#2a5060;line-height:1.6;margin-bottom:14px}
+.tc-link{font-family:'DM Sans',sans-serif;font-size:11px;color:#1a4050;display:block;margin-bottom:4px;transition:color .2s}
+.tc-link:hover{color:var(--c)}
+
+/* TESTIMONIALS */
+.tst-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:20px;max-width:940px;margin:0 auto}
+.tst{background:var(--d2);border:1px solid rgba(0,212,255,.1);border-radius:5px;padding:26px 22px;position:relative}
+.tst-q{font-family:'DM Sans',sans-serif;font-size:38px;color:rgba(0,212,255,.12);line-height:1;margin-bottom:8px}
+.tst-p{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:22px;font-style:italic}
+.tst-av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,rgba(0,212,255,.2),rgba(191,0,255,.2));border:1px solid rgba(0,212,255,.28);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:12px;color:var(--c);margin-right:12px;flex-shrink:0}
+.tst-name{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:#e0f4ff}
+.tst-role{font-family:'DM Sans',sans-serif;font-size:11px;color:#3a6070}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:36px;max-width:920px;margin:0 auto}
+.ci{background:var(--d2);border:1px solid rgba(0,212,255,.13);border-radius:5px;padding:18px 20px;margin-bottom:14px}
+.ci-label{font-family:'Orbitron',sans-serif;font-size:8px;color:var(--c);letter-spacing:3px;margin-bottom:7px}
+.ci-val{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);line-height:1.7}
+.ci-val a{color:var(--muted);text-decoration:none}
+.wa{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;background:transparent;border:1px solid rgba(0,255,119,.28);border-radius:5px;color:#00ff77;font-family:'Syne',sans-serif;font-weight:600;font-size:13px;cursor:pointer;transition:all .3s;text-decoration:none}
+.wa:hover{background:rgba(0,255,119,.07);box-shadow:0 0 18px rgba(0,255,119,.15)}
+.form-card{background:var(--d2);border:1px solid rgba(0,212,255,.13);border-radius:5px;padding:32px 28px}
+.form-h{font-family:'Syne',sans-serif;font-weight:700;font-size:19px;color:#e0f4ff;margin-bottom:22px}
+.field{width:100%;background:#040e1a;border:1px solid rgba(0,212,255,.15);color:#e0f4ff;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:13px;border-radius:4px;outline:none;transition:border-color .3s;margin-bottom:12px}
+.field:focus{border-color:rgba(0,212,255,.6);box-shadow:0 0 10px rgba(0,212,255,.12)}
+.field::placeholder{color:#1a3a4a}
+.sbtn{width:100%;padding:13px;background:var(--grad);color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;border:none;border-radius:4px;cursor:pointer;transition:all .3s;margin-top:2px}
+.sbtn:hover{opacity:.9;box-shadow:0 6px 22px rgba(0,212,255,.3);transform:translateY(-1px)}
+
+/* FOOTER */
+.footer{border-top:1px solid rgba(0,212,255,.1);padding:40px 5vw 24px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:44px;margin-bottom:36px}
+.footer-ft{font-family:'Orbitron',sans-serif;font-size:12px;color:var(--dim);font-weight:700;margin-bottom:14px}
+.footer-p{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--dim);line-height:1.8}
+.footer-link{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--dim);display:block;margin-bottom:9px;cursor:pointer;transition:color .2s}
+.footer-link:hover{color:var(--c)}
+.footer-bar{border-top:1px solid rgba(0,212,255,.07);padding-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.footer-copy{font-family:'DM Sans',sans-serif;font-size:11px;color:#0d2030}
+.footer-loc{font-family:'Orbitron',sans-serif;font-size:8px;color:#0d2030;letter-spacing:2px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo" onclick="go('hero')">
+      <svg width="32" height="32" viewBox="0 0 100 100" style="filter:drop-shadow(0 0 7px rgba(0,212,255,.7));animation:float 4s ease-in-out infinite">
+        <defs><linearGradient id="ng" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#bf00ff"/></linearGradient></defs>
+        <path d="M10 50 Q50 16 90 50 Q50 84 10 50Z" fill="url(#ng)" opacity=".9"/>
+        <circle cx="50" cy="50" r="17" fill="#001a2e"/>
+        <circle cx="50" cy="50" r="9" fill="#000d1a"/>
+        <circle cx="44" cy="44" r="3" fill="white" opacity=".9"/>
+        <line x1="10" y1="50" x2="2" y2="50" stroke="#00d4ff" stroke-width="1.5"/>
+        <line x1="90" y1="50" x2="98" y2="50" stroke="#00d4ff" stroke-width="1.5"/>
+        <circle cx="2" cy="50" r="2" fill="#00d4ff"/><circle cx="98" cy="50" r="2" fill="#00d4ff"/>
+      </svg>
+      <div>
+        <div class="logo-text">LOOKS TECH</div>
+        <div class="logo-sub">Solutions</div>
+      </div>
+    </div>
+    <div class="nav-links">
+      <button class="nl act" onclick="go('hero')">Home</button>
+      <button class="nl" onclick="go('services')">Services</button>
+      <button class="nl" onclick="go('about')">About</button>
+      <button class="nl" onclick="go('projects')">Projects</button>
+      <button class="nl" onclick="go('workshops')">Workshops</button>
+      <button class="nl" onclick="go('pricing')">Pricing</button>
+      <button class="nl" onclick="go('team')">Team</button>
+      <button class="nav-cta" onclick="go('contact')">Contact Us</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero" class="hero">
+  <div class="ring-cont"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div></div>
+  <div class="hero-grid" style="width:100%">
+    <div class="hero-left">
+      <p class="hero-eyebrow">— LOOKS TECH SOLUTIONS —</p>
+      <h1 class="hero-h1">
+        <span>Ready For Any</span><br>
+        <span class="grad-text">Tech Project</span>
+      </h1>
+      <p class="hero-sub">AI · Vision · Security · Development</p>
+      <p class="hero-p">We're a tech solutions company that builds intelligent AI systems, computer vision pipelines, cybersecurity tools, and full-stack applications — for amazing companies and disruptive startups.</p>
+      <div class="btns">
+        <button class="btn-p" onclick="go('projects')">Explore Projects ↗</button>
+        <button class="btn-o" onclick="go('contact')">Get In Touch</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="eye-wrap">
+        <div class="eye-ring er1"></div>
+        <div class="eye-ring er2"></div>
+        <svg width="200" height="200" viewBox="0 0 100 100" style="filter:drop-shadow(0 0 22px rgba(0,212,255,.7));animation:float 4s ease-in-out infinite;position:relative;z-index:1">
+          <defs>
+            <radialGradient id="eb" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#001a2e"/><stop offset="100%" stop-color="#00d4ff" stop-opacity=".15"/></radialGradient>
+            <linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#bf00ff"/></linearGradient>
+          </defs>
+          <path d="M6 50 Q50 10 94 50 Q50 90 6 50Z" fill="url(#hg)" opacity=".88"/>
+          <circle cx="50" cy="50" r="21" fill="url(#eb)"/>
+          <circle cx="50" cy="50" r="12" fill="#000d1a"/>
+          <circle cx="43" cy="43" r="4.5" fill="white" opacity=".9"/>
+          <line x1="6" y1="50" x2="0" y2="50" stroke="#00d4ff" stroke-width="1.8"/>
+          <line x1="94" y1="50" x2="100" y2="50" stroke="#00d4ff" stroke-width="1.8"/>
+          <circle cx="0" cy="50" r="2.5" fill="#00d4ff"/><circle cx="100" cy="50" r="2.5" fill="#00d4ff"/>
+          <line x1="13" y1="41" x2="4" y2="33" stroke="#00d4ff" stroke-width="1.4"/>
+          <line x1="13" y1="59" x2="4" y2="67" stroke="#bf00ff" stroke-width="1.4"/>
+          <line x1="87" y1="41" x2="96" y2="33" stroke="#00d4ff" stroke-width="1.4"/>
+          <line x1="87" y1="59" x2="96" y2="67" stroke="#bf00ff" stroke-width="1.4"/>
+          <circle cx="4" cy="33" r="2" fill="#00d4ff"/><circle cx="4" cy="67" r="2" fill="#bf00ff"/>
+          <circle cx="96" cy="33" r="2" fill="#00d4ff"/><circle cx="96" cy="67" r="2" fill="#bf00ff"/>
+        </svg>
+        <!-- Floating tags -->
+        <div style="position:absolute;top:5%;left:-5%;background:#071420;border:1px solid rgba(0,212,255,.3);border-radius:4px;padding:8px 14px;font-family:'Orbitron',sans-serif;font-size:9px;color:#00d4ff;animation:float 5s ease-in-out infinite .5s">🤖 AI</div>
+        <div style="position:absolute;top:5%;right:-5%;background:#071420;border:1px solid rgba(191,0,255,.3);border-radius:4px;padding:8px 14px;font-family:'Orbitron',sans-serif;font-size:9px;color:#bf00ff;animation:float 5s ease-in-out infinite 1s">👁 Vision</div>
+        <div style="position:absolute;bottom:8%;left:-5%;background:#071420;border:1px solid rgba(0,212,255,.3);border-radius:4px;padding:8px 14px;font-family:'Orbitron',sans-serif;font-size:9px;color:#00d4ff;animation:float 5s ease-in-out infinite 1.5s">🔐 Security</div>
+        <div style="position:absolute;bottom:8%;right:-5%;background:#071420;border:1px solid rgba(191,0,255,.3);border-radius:4px;padding:8px 14px;font-family:'Orbitron',sans-serif;font-size:9px;color:#bf00ff;animation:float 5s ease-in-out infinite 2s">💻 Dev</div>
+      </div>
+    </div>
+  </div>
+  <!-- Stats -->
+  <div class="hero-stats" style="position:absolute;bottom:28px;left:5vw;right:5vw">
+    <div class="hs"><div class="hs-n" id="c1">0+</div><div class="hs-l">Active Projects</div></div>
+    <div class="hs"><div class="hs-n" id="c2">0</div><div class="hs-l">Tasks in Progress</div></div>
+    <div class="hs"><div class="hs-n" id="c3">0</div><div class="hs-l">Workshops</div></div>
+    <div class="hs"><div class="hs-n">99.99%</div><div class="hs-l">System Uptime</div></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="sec sec-alt">
+  <div class="sec-head">
+    <p class="eyebrow">— Specializing In —</p>
+    <h2 class="sec-title">Our Services</h2>
+    <div class="divider"></div>
+    <p class="sec-p">We deliver high-quality, research-grade tech solutions that don't waste your time or money.</p>
+  </div>
+  <div class="svc-grid">
+    <div class="svc-card"><div class="svc-icon">🧠</div><div class="svc-title">AI & Machine Learning</div><div class="svc-desc">Custom ML models, OCR systems, and intelligent automation tailored to your business needs.</div></div>
+    <div class="svc-card"><div class="svc-icon">🖼️</div><div class="svc-title">Computer Vision</div><div class="svc-desc">Image recognition, graph analysis, and visual AI pipelines built with OpenCV and deep learning.</div></div>
+    <div class="svc-card"><div class="svc-icon">🔐</div><div class="svc-title">Cybersecurity</div><div class="svc-desc">End-to-end vulnerability audits, penetration testing, and enterprise threat detection systems.</div></div>
+    <div class="svc-card"><div class="svc-icon">💻</div><div class="svc-title">Web Development</div><div class="svc-desc">Full-stack React and Node.js applications with beautiful, high-performance interfaces.</div></div>
+    <div class="svc-card"><div class="svc-icon">📊</div><div class="svc-title">Data Analytics</div><div class="svc-desc">Business intelligence dashboards, Python analytics pipelines, and data visualizations.</div></div>
+    <div class="svc-card"><div class="svc-icon">🎓</div><div class="svc-title">Tech Training</div><div class="svc-desc">Hands-on workshops and corporate training in AI, ML, security, and modern web tech.</div></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="sec">
+  <div class="about-grid">
+    <div class="about-left">
+      <p class="eyebrow">— About Us —</p>
+      <h2 class="about-h">The Future of Tech Starts Here</h2>
+      <p class="about-p">LOOKS TECH Solutions is an innovation-driven technology company based in Madurai, Tamil Nadu. Founded by Dr. S. Kannan, we bridge the gap between academic research and real-world tech applications.</p>
+      <p class="about-p">We specialize in AI, Computer Vision, Cybersecurity, and Full Stack Development — offering both cutting-edge project delivery and industry-ready training.</p>
+      <div style="margin-top:18px">
+        <div class="about-pt" style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#00d4ff,#bf00ff);flex-shrink:0;display:inline-block"></span><span style="font-family:'DM Sans',sans-serif;font-size:13px;color:#7ab8d4">Research-grade AI solutions at startup speed</span></div>
+        <div class="about-pt" style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#00d4ff,#bf00ff);flex-shrink:0;display:inline-block"></span><span style="font-family:'DM Sans',sans-serif;font-size:13px;color:#7ab8d4">Industry-ready training workshops since 2020</span></div>
+        <div class="about-pt" style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#00d4ff,#bf00ff);flex-shrink:0;display:inline-block"></span><span style="font-family:'DM Sans',sans-serif;font-size:13px;color:#7ab8d4">Academic collaboration with Madurai Kamaraj University</span></div>
+        <div class="about-pt" style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#00d4ff,#bf00ff);flex-shrink:0;display:inline-block"></span><span style="font-family:'DM Sans',sans-serif;font-size:13px;color:#7ab8d4">End-to-end delivery with dedicated support</span></div>
+      </div>
+      <div style="margin-top:28px">
+        <button class="btn-p" onclick="go('contact')">Work With Us ↗</button>
+      </div>
+    </div>
+    <div class="about-right">
+      <div style="position:absolute;inset:0;border-radius:50%;border:1px solid rgba(0,212,255,.07);animation:spin 28s linear infinite"></div>
+      <div style="position:absolute;inset:36px;border-radius:50%;border:1px dashed rgba(191,0,255,.06);animation:spinRev 20s linear infinite"></div>
+      <svg width="180" height="180" viewBox="0 0 100 100" style="filter:drop-shadow(0 0 20px rgba(0,212,255,.5));position:relative;z-index:1">
+        <defs><linearGradient id="ag" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#bf00ff"/></linearGradient></defs>
+        <path d="M5 50 Q50 8 95 50 Q50 92 5 50Z" fill="url(#ag)" opacity=".85"/>
+        <circle cx="50" cy="50" r="22" fill="#001a2e"/>
+        <circle cx="50" cy="50" r="13" fill="#000d1a"/>
+        <circle cx="43" cy="43" r="5" fill="white" opacity=".9"/>
+      </svg>
+      <div class="astat" style="top:8%;left:2%"><div class="astat-n">12+</div><div class="astat-l">Projects</div></div>
+      <div class="astat" style="top:8%;right:2%"><div class="astat-n">99.99%</div><div class="astat-l">Uptime</div></div>
+      <div class="astat" style="bottom:8%;left:2%"><div class="astat-n">4</div><div class="astat-l">Experts</div></div>
+      <div class="astat" style="bottom:8%;right:2%"><div class="astat-n">5+</div><div class="astat-l">Workshops</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="sec sec-alt">
+  <div class="sec-head">
+    <p class="eyebrow">— Our Work —</p>
+    <h2 class="sec-title">Recent Projects</h2>
+    <div class="divider"></div>
+    <p class="sec-p">Real-world solutions built with cutting-edge AI and engineering excellence.</p>
+  </div>
+  <div class="proj-grid">
+    <div class="proj-card">
+      <div class="status" style="color:#00ff9f;border-color:rgba(0,255,159,.3)"><span class="dot" style="background:#00ff9f;animation:pulse 1.5s infinite"></span>ACTIVE</div>
+      <div class="proj-tag">Machine Learning</div>
+      <div class="proj-h">AI OCR System</div>
+      <div class="proj-p">Advanced handwritten and printed character recognition using hybrid ML + graph models.</div>
+    </div>
+    <div class="proj-card">
+      <div class="status" style="color:#bf00ff;border-color:rgba(191,0,255,.3)"><span class="dot" style="background:#bf00ff"></span>PENDING</div>
+      <div class="proj-tag">Security</div>
+      <div class="proj-h">Cyber Security Audit</div>
+      <div class="proj-p">End-to-end vulnerability analysis and enterprise system threat detection.</div>
+    </div>
+    <div class="proj-card">
+      <div class="status" style="color:#00d4ff;border-color:rgba(0,212,255,.3)"><span class="dot" style="background:#00d4ff"></span>COMPLETED</div>
+      <div class="proj-tag">Web Dev</div>
+      <div class="proj-h">LOOKS TECH Website</div>
+      <div class="proj-p">Full responsive website, dashboard, animations and team pages built with React.</div>
+    </div>
+    <div class="proj-card">
+      <div class="status" style="color:#00ff9f;border-color:rgba(0,255,159,.3)"><span class="dot" style="background:#00ff9f;animation:pulse 1.5s infinite .3s"></span>ACTIVE</div>
+      <div class="proj-tag">Computer Vision</div>
+      <div class="proj-h">Image Graph Analyzer</div>
+      <div class="proj-p">Converts images to graph nodes using corner detection and adjacency analysis.</div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKSHOPS -->
+<section id="workshops" class="sec">
+  <div class="sec-head">
+    <p class="eyebrow ey-p">— Learn & Grow —</p>
+    <h2 class="sec-title">Workshop Centre</h2>
+    <div class="divider" style="background:linear-gradient(90deg,#bf00ff,#00d4ff)"></div>
+    <p class="sec-p">Industry-ready, hands-on training programs designed to accelerate your tech career.</p>
+  </div>
+  <div class="ws-grid">
+    <div class="ws-card"><div class="ws-icon">🤖</div><div class="ws-h">AI & Machine Learning</div><div class="ws-p">Hands-on training on AI, ML models, dataset preparation, and real-time applications.</div><div class="ws-tags"><span class="ws-tag">⏱ 6 Weeks</span><span class="ws-tag">👤 30 Seats</span></div><button class="ws-btn" onclick="go('contact')">Register Now</button></div>
+    <div class="ws-card"><div class="ws-icon">💻</div><div class="ws-h">Full Stack Development</div><div class="ws-p">Learn HTML, CSS, JavaScript, React, Node.js, REST API, and cloud deployment.</div><div class="ws-tags"><span class="ws-tag">⏱ 8 Weeks</span><span class="ws-tag">👤 25 Seats</span></div><button class="ws-btn" onclick="go('contact')">Join Workshop</button></div>
+    <div class="ws-card"><div class="ws-icon">👁️</div><div class="ws-h">Computer Vision & OCR</div><div class="ws-p">Explore image processing, OpenCV, feature extraction, and OCR model development.</div><div class="ws-tags"><span class="ws-tag">⏱ 4 Weeks</span><span class="ws-tag">👤 20 Seats</span></div><button class="ws-btn" onclick="go('contact')">Enroll Now</button></div>
+    <div class="ws-card"><div class="ws-icon">🔐</div><div class="ws-h">Cybersecurity Basics</div><div class="ws-p">Network security, ethical hacking fundamentals, and security testing tools.</div><div class="ws-tags"><span class="ws-tag">⏱ 5 Weeks</span><span class="ws-tag">👤 15 Seats</span></div><button class="ws-btn" onclick="go('contact')">Start Learning</button></div>
+    <div class="ws-card"><div class="ws-icon">📊</div><div class="ws-h">Data Science & Analytics</div><div class="ws-p">Data cleaning, visualization, Python analytics, and dashboards for business.</div><div class="ws-tags"><span class="ws-tag">⏱ 6 Weeks</span><span class="ws-tag">👤 25 Seats</span></div><button class="ws-btn" onclick="go('contact')">Sign Up</button></div>
+    <div class="ws-card"><div class="ws-icon">✍️</div><div class="ws-h">Research Paper Writing</div><div class="ws-p">Academic writing guidance — thesis, journal papers, and research publications support.</div><div class="ws-tags"><span class="ws-tag">⏱ 3 Weeks</span><span class="ws-tag">👤 10 Seats</span></div><button class="ws-btn" onclick="go('contact')">Apply Now</button></div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="sec sec-alt">
+  <div class="sec-head">
+    <p class="eyebrow">— Transparent Pricing —</p>
+    <h2 class="sec-title">Pricing Plans</h2>
+    <div class="divider"></div>
+    <p class="sec-p">Flexible plans for individuals, startups, and enterprises. No hidden charges. Happiness guaranteed.</p>
+  </div>
+  <div class="price-grid">
+    <div class="pc">
+      <div class="pc-label">For Individuals</div>
+      <div class="pc-tier">Starter</div>
+      <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:10px">
+        <span class="pc-price">₹4,999</span><span class="pc-period">/month</span>
+      </div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:#2a5060;margin-bottom:4px">Perfect for students & individuals</div>
+      <div class="pc-sep"></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">1 Project Support</span></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">AI/ML Workshop Access</span></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">Email Support</span></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">Basic Resources</span></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">Community Access</span></div>
+      <button class="pc-btn" onclick="go('contact')">Get Started</button>
+    </div>
+    <div class="pc pc-hot">
+      <div class="pc-badge">MOST POPULAR</div>
+      <div class="pc-label">For Startups</div>
+      <div class="pc-tier">Professional</div>
+      <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:10px">
+        <span class="pc-price">₹14,999</span><span class="pc-period">/month</span>
+      </div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:#2a5060;margin-bottom:4px">Ideal for growing businesses</div>
+      <div class="pc-sep"></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">5 Projects Support</span></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">All Workshop Access</span></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">Priority Support</span></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">Source Code Access</span></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">Team of up to 5</span></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">Custom Solutions</span></div>
+      <button class="pc-btn pc-btn-hot" onclick="go('contact')">Start Now</button>
+    </div>
+    <div class="pc">
+      <div class="pc-label">Full Access</div>
+      <div class="pc-tier">Enterprise</div>
+      <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:10px">
+        <span class="pc-price">₹39,999</span><span class="pc-period">/month</span>
+      </div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:#2a5060;margin-bottom:4px">For large organizations</div>
+      <div class="pc-sep"></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">Unlimited Projects</span></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">Dedicated Team</span></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">24/7 Support</span></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">Custom AI Solutions</span></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">Security Audit Included</span></div>
+      <div class="pc-feat"><span class="pc-check">✓</span><span class="pc-feat-t">On-site Training</span></div>
+      <button class="pc-btn" onclick="go('contact')">Contact Us</button>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team" class="sec">
+  <div class="sec-head">
+    <p class="eyebrow ey-p">— The People —</p>
+    <h2 class="sec-title">Our Team</h2>
+    <div class="divider" style="background:linear-gradient(90deg,#bf00ff,#00d4ff)"></div>
+  </div>
+  <div class="team-grid">
+    <div class="tc"><div class="tc-bar" style="background:linear-gradient(90deg,#00d4ff,#bf00ff)"></div><div class="tc-body"><div class="tc-av">SK</div><div class="tc-name">Dr. S. Kannan</div><div class="tc-role">Founder</div><div class="tc-desc">Visionary & academic liaison. Founder of Looks Tech Solutions.</div><a class="tc-link" href="mailto:founder@lookstech.com">✉ founder@lookstech.com</a><a class="tc-link" href="tel:+918681819168">☎ +91 86818 19168</a></div></div>
+    <div class="tc"><div class="tc-bar" style="background:linear-gradient(90deg,#bf00ff,#00d4ff)"></div><div class="tc-body"><div class="tc-av">MS</div><div class="tc-name">Mr. M. Saravanakumar</div><div class="tc-role">Director</div><div class="tc-desc">Director — operations & project delivery.</div><a class="tc-link" href="mailto:saravanakumasr@gmail.com">✉ saravanakumasr@gmail.com</a><a class="tc-link" href="tel:+918681819168">☎ +91 86818 19168</a></div></div>
+    <div class="tc"><div class="tc-bar" style="background:linear-gradient(90deg,#00d4ff,#bf00ff)"></div><div class="tc-body"><div class="tc-av">DD</div><div class="tc-name">Mrs. M. Dharani Devi</div><div class="tc-role">Manager</div><div class="tc-desc">Manager — training, workshops & HR coordination.</div><a class="tc-link" href="mailto:manager@lookstech.com">✉ manager@lookstech.com</a><a class="tc-link" href="tel:+919894694968">☎ +91 98946 94968</a></div></div>
+    <div class="tc"><div class="tc-bar" style="background:linear-gradient(90deg,#bf00ff,#00d4ff)"></div><div class="tc-body"><div class="tc-av">BJ</div><div class="tc-name">Mr. Balaji</div><div class="tc-role">Member</div><div class="tc-desc">Team member — support & field operations.</div><a class="tc-link" href="mailto:balaji@lookstech.com">✉ balaji@lookstech.com</a><a class="tc-link" href="tel:+919894694968">☎ +91 98946 94968</a></div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="sec sec-alt">
+  <div class="sec-head">
+    <p class="eyebrow">— Client Stories —</p>
+    <h2 class="sec-title">What Our Clients Say</h2>
+    <div class="divider"></div>
+  </div>
+  <div class="tst-grid">
+    <div class="tst"><div class="tst-q">"</div><p class="tst-p">LOOKS TECH transformed our product with their AI OCR system. Accuracy went from 60% to 97%. Exceptional team and delivery speed.</p><div style="display:flex;align-items:center"><div class="tst-av">RK</div><div><div class="tst-name">Ravi Kumar</div><div class="tst-role">Startup Founder</div></div></div></div>
+    <div class="tst"><div class="tst-q">"</div><p class="tst-p">Attended their Full Stack workshop — best investment of my time. Got placed in 3 weeks. The curriculum is genuinely industry-ready.</p><div style="display:flex;align-items:center"><div class="tst-av">PM</div><div><div class="tst-name">Priya Menon</div><div class="tst-role">Software Engineer</div></div></div></div>
+    <div class="tst"><div class="tst-q">"</div><p class="tst-p">Their collaboration with academia is seamless. Research-grade work delivered at startup speed. Highly recommended for any institution.</p><div style="display:flex;align-items:center"><div class="tst-av">AS</div><div><div class="tst-name">Dr. Arun Selvam</div><div class="tst-role">Professor, MKU</div></div></div></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="sec">
+  <div class="sec-head">
+    <p class="eyebrow ey-p">— Reach Out —</p>
+    <h2 class="sec-title">Get In Touch</h2>
+    <div class="divider" style="background:linear-gradient(90deg,#bf00ff,#00d4ff)"></div>
+    <p class="sec-p">Have a project in mind or want to enroll in a workshop? We'd love to hear from you.</p>
+  </div>
+  <div class="contact-grid">
+    <div>
+      <div class="ci"><div class="ci-label">📍 Address</div><div class="ci-val">13 PMA Building, Vadapalanji,<br>Near Madurai Kamaraj University,<br>Madurai, Tamil Nadu, India</div></div>
+      <div class="ci"><div class="ci-label">📞 Phone</div><div class="ci-val"><a href="tel:+918681819168">+91 86818 19168</a></div></div>
+      <div class="ci"><div class="ci-label">📧 Email</div><div class="ci-val"><a href="mailto:saravanakumasr@gmail.com">saravanakumasr@gmail.com</a><br><a href="mailto:msaravanakumarsk.in@gmail.com">msaravanakumarsk.in@gmail.com</a></div></div>
+      <a class="wa" href="https://wa.me/918681819168" target="_blank">💬 Chat on WhatsApp</a>
+    </div>
+    <div class="form-card">
+      <div class="form-h">Send a Message</div>
+      <input class="field" placeholder="Your Name" type="text">
+      <input class="field" placeholder="Your Email" type="email">
+      <input class="field" placeholder="Subject" type="text">
+      <textarea class="field" placeholder="Your Message" rows="4" style="resize:vertical"></textarea>
+      <button class="sbtn">📨 Send Message</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <svg width="28" height="28" viewBox="0 0 100 100">
+          <defs><linearGradient id="fg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#bf00ff"/></linearGradient></defs>
+          <path d="M10 50 Q50 16 90 50 Q50 84 10 50Z" fill="url(#fg)" opacity=".85"/>
+          <circle cx="50" cy="50" r="15" fill="#020b18"/>
+          <circle cx="50" cy="50" r="8" fill="#000d1a"/>
+          <circle cx="44" cy="44" r="2.5" fill="white" opacity=".8"/>
+        </svg>
+        <div>
+          <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:12px;letter-spacing:3px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">LOOKS TECH</div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:8px;letter-spacing:3px;color:#1a3040;text-transform:uppercase">Solutions</div>
+        </div>
+      </div>
+      <p class="footer-p" style="max-width:240px">Pioneering AI, Computer Vision, and Cybersecurity solutions from Madurai to the world.</p>
+    </div>
+    <div>
+      <div class="footer-ft">Quick Links</div>
+      <span class="footer-link" onclick="go('hero')">Home</span>
+      <span class="footer-link" onclick="go('services')">Services</span>
+      <span class="footer-link" onclick="go('about')">About</span>
+      <span class="footer-link" onclick="go('projects')">Projects</span>
+      <span class="footer-link" onclick="go('workshops')">Workshops</span>
+      <span class="footer-link" onclick="go('pricing')">Pricing</span>
+      <span class="footer-link" onclick="go('team')">Team</span>
+      <span class="footer-link" onclick="go('contact')">Contact</span>
+    </div>
+    <div>
+      <div class="footer-ft">Contact</div>
+      <p class="footer-p">13 PMA Building, Vadapalanji,<br>Madurai, Tamil Nadu<br><br><a href="tel:+918681819168" style="color:#0d2030">+91 86818 19168</a><br><a href="mailto:saravanakumasr@gmail.com" style="color:#0d2030">saravanakumasr@gmail.com</a></p>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <span class="footer-copy">© 2025 LOOKS TECH Solutions. All Rights Reserved.</span>
+    <span class="footer-loc">MADURAI · TAMIL NADU · INDIA</span>
+  </div>
+</footer>
+
+<script>
+function go(id){
+  const el=document.getElementById(id);
+  if(el)el.scrollIntoView({behavior:'smooth'});
+  document.querySelectorAll('.nl').forEach(n=>n.classList.remove('act'));
+  const navMap={hero:'Home',services:'Services',about:'About',projects:'Projects',workshops:'Workshops',pricing:'Pricing',team:'Team',contact:'Contact'};
+  document.querySelectorAll('.nl').forEach(n=>{if(n.textContent===navMap[id])n.classList.add('act')});
+}
+
+// Counter animation
+function animateCount(el,target,suffix,delay){
+  setTimeout(()=>{
+    const dur=1800,start=Date.now();
+    const tick=()=>{
+      const p=Math.min((Date.now()-start)/dur,1);
+      el.textContent=Math.round(target*p)+suffix;
+      if(p<1)requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  },delay||0);
+}
+animateCount(document.getElementById('c1'),12,'+',400);
+animateCount(document.getElementById('c2'),24,'',600);
+animateCount(document.getElementById('c3'),3,'',800);
+</script>
+</body>
+</html>
